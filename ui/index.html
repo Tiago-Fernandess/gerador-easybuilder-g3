@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link
+      href="https://media.base44.com/images/public/6a9dc91a14b8873fe7e9d935/15a4820b8_logo.jpg/v1/fit/w_180,h_180/15a4820b8_logo.jpg"
+      rel="icon"
+      type="image/svg+xml"
+    />
+    <title>Gerador IHM 2.0 · G3 Automation</title>
+    <style>
+      /* Para ajustar a identidade visual, altere apenas as cores abaixo */
+      :root {
+        --bg: #060b17;
+        --panel: #0d1630;
+        --panel2: #121d3d;
+        --line: #1d2c52;
+        --text: #e9efff;
+        --mut: #8b9cc6;
+        --acc: #008e9d;
+        --acc2: #c5c2c0;
+        --ok: #34d399;
+        --warn: #fbbf24;
+        --err: #f87171;
+        --c-base: #94a3b8;
+        --c-cota: #22d3ee;
+        --c-tempo: #a78bfa;
+        --c-param: #4f7cff;
+        --c-bool: #fbbf24;
+        color-scheme: dark;
+      }
+
+      /* :root {
+        --bg: #060b17;
+        --panel: #0d1630;
+        --panel2: #121d3d;
+        --line: #1d2c52;
+        --text: #e9efff;
+        --mut: #8b9cc6;
+        --acc: #22d3ee;
+        --acc2: #4f7cff;
+        --ok: #34d399;
+        --warn: #fbbf24;
+        --err: #f87171;
+        --c-base: #94a3b8;
+        --c-cota: #22d3ee;
+        --c-tempo: #a78bfa;
+        --c-param: #4f7cff;
+        --c-bool: #fbbf24;
+        color-scheme: dark;
+      } */
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(900px 500px at 85% -10%, #15306b55, transparent),
+          radial-gradient(700px 400px at -10% 110%, #0e5a7a33, transparent),
+          linear-gradient(#ffffff06 1px, transparent 1px) 0 0/100% 32px,
+          var(--bg);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 14px 28px;
+        border-bottom: 1px solid var(--line);
+        background: #060b17cc;
+        backdrop-filter: blur(8px);
+      }
+
+      .icon {
+        border-radius: 0.25rem;
+        overflow: hidden;
+        width: 2.5rem;
+        height: 2.5rem;
+        display: inline-block;
+        position: relative;
+      }
+
+      .title-g3 {
+        font-family:
+          Chakra Petch,
+          ui-sans-serif,
+          system-ui,
+          sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1.25;
+        border-color: hsl(var(--border));
+        outline-color: hsl(var(--ring) / 0.5);
+      }
+
+      .subtitle-g3 {
+        font-size: 0.75rem;
+        line-height: 1rem;
+        --tw-text-opacity: 1;
+        color: rgb(148 163 184 / var(--tw-text-opacity, 1));
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+      .mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 16px;
+        letter-spacing: -0.5px;
+        color: #04121f;
+        background: linear-gradient(135deg, var(--acc), var(--acc2));
+        box-shadow: 0 0 22px #22d3ee40;
+      }
+      .logo b {
+        display: block;
+        font-size: 13px;
+        letter-spacing: 0.22em;
+        font-weight: 700;
+      }
+      .logo small {
+        color: var(--mut);
+        font-size: 11px;
+      }
+      .title {
+        margin-left: 10px;
+        padding-left: 18px;
+        border-left: 1px solid var(--line);
+      }
+      .title h1 {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .title p {
+        color: var(--mut);
+        font-size: 12px;
+      }
+      .steps {
+        margin-left: auto;
+        display: flex;
+        gap: 6px;
+        list-style: none;
+        padding: 0;
+      }
+      .steps li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 99px;
+        color: var(--mut);
+        font-size: 12.5px;
+        border: 1px solid transparent;
+      }
+      .steps i {
+        font-style: normal;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+      }
+      .steps li.on {
+        color: var(--text);
+        border-color: var(--line);
+        background: var(--panel);
+      }
+      .steps li.on i {
+        background: var(--acc);
+        color: #04121f;
+        border-color: var(--acc);
+      }
+      .steps li.done i {
+        background: var(--ok);
+        color: #04121f;
+        border-color: var(--ok);
+      }
+      main {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 20px;
+        padding: 22px 28px 26px;
+      }
+      .card {
+        background: linear-gradient(180deg, var(--panel), #0a1228);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 12px 40px #0006;
+      }
+      .left {
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      /* dropzone */
+      #dz {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 10px;
+        padding: 40px;
+        border: 2px dashed #2a3f73;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      #dz:hover,
+      #dz.over {
+        border-color: var(--acc);
+        background:
+          radial-gradient(500px 260px at 50% 40%, #22d3ee14, transparent),
+          var(--panel);
+        box-shadow: 0 0 0 4px #22d3ee14;
+      }
+      .ico {
+        width: 74px;
+        height: 74px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #22d3ee22, #4f7cff22);
+        border: 1px solid #2a4a85;
+        margin-bottom: 6px;
+      }
+      #dz h2 {
+        font-size: 21px;
+        font-weight: 600;
+      }
+      #dz p {
+        color: var(--mut);
+        max-width: 430px;
+      }
+      .btn {
+        font: inherit;
+        font-weight: 600;
+        border: 1px solid var(--line);
+        background: var(--panel2);
+        color: var(--text);
+        padding: 9px 16px;
+        border-radius: 11px;
+        cursor: pointer;
+        transition: 0.15s;
+      }
+      .btn:hover {
+        border-color: var(--acc);
+        color: var(--acc);
+      }
+      .btn.pri {
+        border: 0;
+        color: #04121f;
+        background: linear-gradient(135deg, var(--acc), var(--acc2));
+        padding: 13px 20px;
+        font-size: 15px;
+        width: 100%;
+        box-shadow: 0 8px 26px #22d3ee33;
+      }
+      .btn.pri:hover {
+        filter: brightness(1.1);
+        color: #04121f;
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        filter: none;
+        box-shadow: none;
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .chips span {
+        font-size: 12px;
+        padding: 4px 11px;
+        border-radius: 99px;
+        border: 1px solid var(--line);
+        color: var(--mut);
+      }
+      .err {
+        color: var(--err);
+        background: #f8717115;
+        border: 1px solid #f8717144;
+        padding: 9px 14px;
+        border-radius: 11px;
+        margin-top: 8px;
+        max-width: 480px;
+      }
+      /* revisão */
+      #rv {
+        flex: 1;
+        min-height: 0;
+        display: none;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .file {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+      }
+      .file b {
+        font-weight: 600;
+      }
+      .file small {
+        color: var(--mut);
+      }
+      .file .btn {
+        margin-left: auto;
+        padding: 7px 14px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+      }
+      .stat {
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        cursor: pointer;
+        text-align: left;
+        font: inherit;
+        color: inherit;
+        transition: 0.15s;
+        position: relative;
+        overflow: hidden;
+      }
+      .stat:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--c, var(--acc));
+      }
+      .stat:hover {
+        border-color: #2f4680;
+      }
+      .stat.on {
+        border-color: var(--c, var(--acc));
+        background: var(--panel2);
+        box-shadow: 0 0 18px
+          color-mix(in srgb, var(--c, var(--acc)) 22%, transparent);
+      }
+      .stat strong {
+        display: block;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.1;
+      }
+      .stat span {
+        color: var(--mut);
+        font-size: 12px;
+      }
+      .tbl {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .tool {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .tool h3 {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .tool small {
+        color: var(--mut);
+      }
+      .tool input {
+        margin-left: auto;
+        width: 240px;
+        font: inherit;
+        color: var(--text);
+        background: #060b17;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 12px;
+        outline: 0;
+      }
+      .tool input:focus {
+        border-color: var(--acc);
+      }
+      .scroll {
+        overflow: auto;
+        flex: 1;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        position: sticky;
+        top: 0;
+        background: #0f1a38;
+        text-align: left;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--mut);
+        padding: 9px 16px;
+        font-weight: 600;
+      }
+      td {
+        padding: 8px 16px;
+        border-top: 1px solid #16234a;
+      }
+      tr:hover td {
+        background: #ffffff05;
+      }
+      td.n {
+        color: var(--mut);
+        width: 52px;
+      }
+      td.v {
+        font-family: "Cascadia Mono", Consolas, monospace;
+        font-size: 12.5px;
+      }
+      .pill {
+        display: inline-block;
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 99px;
+        color: var(--c);
+        background: color-mix(in srgb, var(--c) 14%, transparent);
+        border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+      }
+      .ty {
+        color: var(--mut);
+        font-family: Consolas, monospace;
+        font-size: 12px;
+      }
+      /* saída */
+      aside {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 20px;
+        min-height: 0;
+        overflow: auto;
+      }
+      aside h3 {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--mut);
+        font-weight: 600;
+      }
+      .dir {
+        display: flex;
+        gap: 8px;
+      }
+      .dir input {
+        flex: 1;
+        min-width: 0;
+        font:
+          12.5px Consolas,
+          monospace;
+        color: var(--text);
+        background: #060b17;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 11px;
+        outline: 0;
+      }
+      .dir input:focus {
+        border-color: var(--acc);
+      }
+      .dir .btn {
+        padding: 8px 12px;
+      }
+      .out {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .out li {
+        display: flex;
+        gap: 11px;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        opacity: 0.55;
+        transition: 0.3s;
+      }
+      .out li.ready {
+        opacity: 1;
+      }
+      .out li.done {
+        opacity: 1;
+        border-color: #34d39955;
+        background: #34d3990d;
+      }
+      .out svg {
+        flex: none;
+      }
+      .out b {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        word-break: break-all;
+      }
+      .out small {
+        color: var(--mut);
+        font-size: 11.5px;
+      }
+      .out em {
+        margin-left: auto;
+        font-style: normal;
+        color: var(--ok);
+        font-size: 11.5px;
+        white-space: nowrap;
+      }
+      .ok {
+        display: none;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 14px;
+        border-radius: 12px;
+        color: var(--ok);
+        background: #34d3991a;
+        border: 1px solid #34d39955;
+        font-weight: 600;
+      }
+      .sp {
+        flex: 1;
+      }
+      .spin {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border: 2px solid #04121f55;
+        border-top-color: #04121f;
+        border-radius: 50%;
+        animation: r 0.7s linear infinite;
+        vertical-align: -2px;
+        margin-right: 8px;
+      }
+      @keyframes r {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .hint {
+        color: var(--mut);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="icon">
+        <span class="icon"
+          ><img
+            src="https://media.base44.com/images/public/6a9dc91a14b8873fe7e9d935/74672dfe0_image.png/v1/fill/w_40,h_40,fp_0.56_0.35,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/74672dfe0_image.webp"
+            srcset="
+              https://media.base44.com/images/public/6a9dc91a14b8873fe7e9d935/74672dfe0_image.png/v1/fill/w_40,h_40,fp_0.56_0.35,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/74672dfe0_image.webp   1x,
+              https://media.base44.com/images/public/6a9dc91a14b8873fe7e9d935/74672dfe0_image.png/v1/fill/w_80,h_80,fp_0.56_0.35,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/74672dfe0_image.webp   2x,
+              https://media.base44.com/images/public/6a9dc91a14b8873fe7e9d935/74672dfe0_image.png/v1/fill/w_120,h_120,fp_0.56_0.35,q_90,usm_0.66_1.00_0.01,enc_webp,quality_auto/74672dfe0_image.webp 3x
+            "
+            loading="lazy"
+            class="logo"
+            alt="G3 AUTOMATION"
+        /></span>
+      </div>
+
+      <div>
+        <div class="title-g3">G3 AUTOMATION</div>
+        <div class="subtitle-g3">Assistência Técnica</div>
+      </div>
+
+      <div class="title">
+        <h1>Gerador IHM 2.0</h1>
+        <p>Database · Transfer Data · Macros de receita</p>
+      </div>
+      <ol class="steps" id="steps">
+        <li class="on"><i>1</i>Planilha</li>
+        <li><i>2</i>Revisão</li>
+        <li><i>3</i>Geração</li>
+      </ol>
+    </header>
+    <main>
+      <div class="left">
+        <label id="dz" class="card" for="file">
+          <div class="ico">
+            <svg
+              width="34"
+              height="34"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#22d3ee"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 16V4m0 0L7 9m5-5 5 5" />
+              <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+            </svg>
+          </div>
+          <h2>Arraste a planilha de variáveis aqui</h2>
+          <p>
+            ou clique para selecionar o arquivo <b>.xlsx</b> exportado da
+            declaração de variáveis do CLP.
+          </p>
+          <div class="chips">
+            <span>Cotas dos eixos</span><span>Tempos</span
+            ><span>Parâmetros</span><span>BOOLs → WORD</span>
+          </div>
+          <div class="err" id="err" hidden></div>
+        </label>
+        <input type="file" id="file" accept=".xlsx" hidden />
+        <section id="rv">
+          <div class="card file">
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#34d399"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"
+              />
+              <path d="M14 3v5h5M9 13l2 2 4-4" />
+            </svg>
+            <div><b id="fn"></b><br /><small id="fs"></small></div>
+            <button class="btn" id="swap">Trocar planilha</button>
+          </div>
+          <div class="stats" id="stats"></div>
+          <div class="card tbl">
+            <div class="tool">
+              <h3>Itens da receita</h3>
+              <small id="cnt"></small
+              ><input id="q" placeholder="Buscar variável…" />
+            </div>
+            <div class="scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Variável</th>
+                    <th>Tipo</th>
+                    <th>Categoria</th>
+                    <th>Endereço</th>
+                  </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <aside class="card">
+        <h3>Pasta de saída</h3>
+        <div class="dir">
+          <input id="out" spellcheck="false" /><button class="btn" id="pick">
+            Alterar
+          </button>
+        </div>
+        <h3 style="margin-top: 6px">Arquivos</h3>
+        <ul class="out" id="files"></ul>
+        <div class="ok" id="ok"></div>
+        <div class="sp"></div>
+        <button class="btn" id="open" hidden>Abrir pasta de saída</button>
+        <button class="btn pri" id="go" disabled>Gerar arquivos</button>
+        <p class="hint">
+          O modelo interno já contém o formato e os códigos ItemType validados.
+          Não é necessário anexar um .db.
+        </p>
+      </aside>
+    </main>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        esc = (s) =>
+          String(s).replace(
+            /[&<>"]/g,
+            (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+          );
+      const CATS = {
+        all: ["Total", "--acc"],
+        cota: ["Cotas", "--c-cota"],
+        tempo: ["Tempos", "--c-tempo"],
+        param: ["Parâmetros", "--c-param"],
+        bool: ["BOOLs", "--c-bool"],
+        base: ["Base", "--c-base"],
+      };
+      const PLAN = [
+        ["Definition_Variables.db", "Banco SQLite da receita", "db"],
+        ["Transfer_Variables.xlsx", "Transfer Data para o EasyBuilder", "xl"],
+        ["0_Executa Receita BOOLs.ebm", "Macro: receita → CLP", "m"],
+        ["1_Salva Receita BOOLs.ebm", "Macro: CLP → receita", "m"],
+      ];
+      const ICON =
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+      let items = [],
+        filter = "all";
+      async function api(p, o) {
+        const r = await fetch(p, o),
+          j = await r.json();
+        if (!r.ok) throw new Error(j.error || "Erro inesperado");
+        return j;
+      }
+      const kb = (n) => (n < 1024 ? n + " B" : (n / 1024).toFixed(1) + " KB");
+      function step(n) {
+        [...$("#steps").children].forEach(
+          (li, i) =>
+            (li.className = i + 1 < n ? "done" : i + 1 == n ? "on" : ""),
+        );
+      }
+      function showErr(m) {
+        const e = $("#err");
+        e.textContent = m;
+        e.hidden = !m;
+      }
+      function plan() {
+        const hasB = items.some((i) => i.cat == "bool");
+        $("#files").innerHTML = PLAN.map(
+          ([n, d, t]) =>
+            `<li class="${items.length && (t != "m" || hasB) ? "ready" : ""}"><span style="color:var(--acc)">${ICON}</span><div><b>${esc(n)}</b><small>${d}${t == "m" && items.length && !hasB ? " (sem BOOLs — não gerada)" : ""}</small></div></li>`,
+        ).join("");
+      }
+      async function load(f) {
+        if (!f) return;
+        showErr("");
+        if (!/\.xlsx$/i.test(f.name))
+          return showErr("Selecione um arquivo .xlsx.");
+        try {
+          const j = await api("/api/analyze", {
+            method: "POST",
+            headers: { "X-Filename": encodeURIComponent(f.name) },
+            body: f,
+          });
+          items = j.items;
+          filter = "all";
+          $("#q").value = "";
+          $("#fn").textContent = f.name;
+          $("#fs").textContent =
+            kb(f.size) + " · " + items.length + " itens identificados";
+          $("#dz").style.display = "none";
+          $("#rv").style.display = "flex";
+          $("#go").disabled = false;
+          $("#ok").style.display = "none";
+          $("#open").hidden = true;
+          $("#go").textContent = "Gerar arquivos";
+          plan();
+          render();
+          step(2);
+        } catch (e) {
+          showErr(e.message);
+        }
+      }
+      function render() {
+        const n = (c) =>
+          c == "all" ? items.length : items.filter((i) => i.cat == c).length;
+        $("#stats").innerHTML = Object.entries(CATS)
+          .filter(([c]) => c == "all" || n(c))
+          .map(
+            ([c, [l, v]]) =>
+              `<button class="stat ${filter == c ? "on" : ""}" data-c="${c}" style="--c:var(${v})"><strong>${n(c)}</strong><span>${l}</span></button>`,
+          )
+          .join("");
+        const q = $("#q").value.trim().toLowerCase(),
+          list = items.filter(
+            (i) =>
+              (filter == "all" || i.cat == filter) &&
+              i.name.toLowerCase().includes(q),
+          );
+        $("#cnt").textContent = list.length + " de " + items.length;
+        $("#rows").innerHTML =
+          list
+            .map(
+              (i) =>
+                `<tr><td class="n">${i.n}</td><td class="v">${esc(i.name)}</td><td class="ty">${esc(i.type)}</td><td><span class="pill" style="--c:var(${CATS[i.cat][1]})">${CATS[i.cat][0]}</span></td><td class="ty">${i.rw ? "RW " + i.rw + " + offset" : i.cat == "base" ? "—" : "VAR://"}</td></tr>`,
+            )
+            .join("") ||
+          '<tr><td colspan="5" class="hint" style="padding:26px;text-align:center">Nenhum item encontrado.</td></tr>';
+      }
+      $("#stats").onclick = (e) => {
+        const b = e.target.closest(".stat");
+        if (b) {
+          filter = b.dataset.c;
+          render();
+        }
+      };
+      $("#q").oninput = render;
+      $("#file").onchange = (e) => {
+        load(e.target.files[0]);
+        e.target.value = "";
+      };
+      $("#swap").onclick = () => {
+        $("#rv").style.display = "none";
+        $("#dz").style.display = "flex";
+        items = [];
+        $("#go").disabled = true;
+        $("#ok").style.display = "none";
+        $("#open").hidden = true;
+        plan();
+        step(1);
+      };
+      const dz = $("#dz");
+      ["dragenter", "dragover"].forEach((t) =>
+        dz.addEventListener(t, (e) => {
+          e.preventDefault();
+          dz.classList.add("over");
+        }),
+      );
+      ["dragleave", "drop"].forEach((t) =>
+        dz.addEventListener(t, (e) => {
+          e.preventDefault();
+          dz.classList.remove("over");
+        }),
+      );
+      dz.addEventListener("drop", (e) => load(e.dataTransfer.files[0]));
+      addEventListener("dragover", (e) => e.preventDefault());
+      addEventListener("drop", (e) => e.preventDefault());
+      $("#pick").onclick = async () => {
+        try {
+          const j = await api("/api/pick", {
+            method: "POST",
+            body: JSON.stringify({ path: $("#out").value }),
+          });
+          if (j.path) $("#out").value = j.path;
+        } catch (e) {}
+      };
+      $("#open").onclick = () =>
+        api("/api/open", {
+          method: "POST",
+          body: JSON.stringify({ path: $("#out").value }),
+        });
+      $("#go").onclick = async () => {
+        const b = $("#go");
+        b.disabled = true;
+        b.innerHTML = '<span class="spin"></span>Gerando…';
+        step(3);
+        try {
+          const j = await api("/api/generate", {
+            method: "POST",
+            body: JSON.stringify({ out: $("#out").value }),
+          });
+          const d = {
+            db: "Banco SQLite da receita",
+            xlsx: "Transfer Data para a IHM",
+            ebm: "Macro IHM",
+          };
+          $("#files").innerHTML = j.files
+            .map(
+              (f) =>
+                `<li class="done"><span style="color:var(--ok)">${ICON}</span><div><b>${esc(f.name)}</b><small>${d[f.name.split(".").pop()] || ""}</small></div><em>✓ ${kb(f.size)}</em></li>`,
+            )
+            .join("");
+          const ok = $("#ok");
+          ok.innerHTML = "✓ Concluído — " + j.count + " itens na receita";
+          ok.style.cssText = "display:flex";
+          $("#open").hidden = false;
+          b.textContent = "Gerar novamente";
+          [...$("#steps").children].forEach((li) => (li.className = "done"));
+        } catch (e) {
+          step(2);
+          b.textContent = "Gerar arquivos";
+          const ok = $("#ok");
+          ok.textContent = e.message;
+          ok.style.cssText =
+            "display:flex;color:var(--err);background:#f8717115;border-color:#f8717144";
+        }
+        b.disabled = false;
+      };
+      api("/api/config").then((j) => ($("#out").value = j.out));
+      plan();
+      setInterval(() => fetch("/api/ping").catch(() => {}), 3000);
+      addEventListener("pagehide", () => navigator.sendBeacon("/api/bye"));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+﻿macro_definition_begin
+    "id": "1"
+    "name": "Salva Receita BOOLs"
+    "startup": "false"
+    "periodic": [ "false" ]
+    "interlock": [ "false" ]
+macro_definition_end
+
+macro_command main()
+
+// Macro READ: OMRON EtherNet/IP -> Recipe RW-5..RW-19
+
+bool IHM_RET_Bts_Reserva
+bool IHM_RET_Bts_Desab_Aviso_Esteira_Cheia
+bool IHM_RET_Bts_Hab_Antecipacao
+bool IHM_RET_Bts_Desab_Conf_Vacuostato_Ext
+bool IHM_RET_Bts_Hab_Rejeitar_Peca
+bool IHM_RET_Bts_Desab_Monitor_Sens_Recuado_Saida_Molde
+bool IHM_RET_Bts_Desab_Descate_Pcs_Inicio_Ciclo
+bool IHM_RET_Bts_Hab_Pega_Unica_Empilhador
+
+short selection
+// Read the current selected record
+GetData(selection, "Local HMI", RECIPE, "Receita_G3.Selection")
+short offset
+offset = selection * 16
+
+//////////////////////Declara Variavel Gerar Pop_Up Loading//////////////////////////////////////////////
+bool AlwaysTrue
+bool AlwaysFalse
+AlwaysTrue = true
+AlwaysFalse = false
+SetData(AlwaysTrue, "Local HMI", LB, 120, 1)
+
+//////////////////////Declara Variavel Receita Salva E Libera Receita Para Ser Executada///////////////////////
+bool Receita_Salva = true
+SetData(Receita_Salva, "Local HMI", RW, 10000 + selection, 1)
+
+GetData(IHM_RET_Bts_Reserva, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Reserva", 1)
+GetData(IHM_RET_Bts_Desab_Aviso_Esteira_Cheia, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Desab_Aviso_Esteira_Cheia", 1)
+GetData(IHM_RET_Bts_Hab_Antecipacao, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Hab_Antecipacao", 1)
+GetData(IHM_RET_Bts_Desab_Conf_Vacuostato_Ext, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Desab_Conf_Vacuostato_Ext", 1)
+GetData(IHM_RET_Bts_Hab_Rejeitar_Peca, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Hab_Rejeitar_Peca", 1)
+GetData(IHM_RET_Bts_Desab_Monitor_Sens_Recuado_Saida_Molde, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Desab_Monitor_Sens_Recuado_Saida_Molde", 1)
+GetData(IHM_RET_Bts_Desab_Descate_Pcs_Inicio_Ciclo, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Desab_Descate_Pcs_Inicio_Ciclo", 1)
+GetData(IHM_RET_Bts_Hab_Pega_Unica_Empilhador, "OMRON EtherNet/IP (NJ/NX Series)", "VAR://IHM_RET.Bts.Hab_Pega_Unica_Empilhador", 1)
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+SetData(IHM_RET_Bts_Reserva, "Local HMI", RW, 5 + offset, 1)
+SetData(IHM_RET_Bts_Desab_Aviso_Esteira_Cheia, "Local HMI", RW, 7 + offset, 1)
+SetData(IHM_RET_Bts_Hab_Antecipacao, "Local HMI", RW, 9 + offset, 1)
+SetData(IHM_RET_Bts_Desab_Conf_Vacuostato_Ext, "Local HMI", RW, 11 + offset, 1)
+SetData(IHM_RET_Bts_Hab_Rejeitar_Peca, "Local HMI", RW, 13 + offset, 1)
+SetData(IHM_RET_Bts_Desab_Monitor_Sens_Recuado_Saida_Molde, "Local HMI", RW, 15 + offset, 1)
+SetData(IHM_RET_Bts_Desab_Descate_Pcs_Inicio_Ciclo, "Local HMI", RW, 17 + offset, 1)
+SetData(IHM_RET_Bts_Hab_Pega_Unica_Empilhador, "Local HMI", RW, 19 + offset, 1)
+
+SetData(AlwaysTrue, "Local HMI", "Bit_Pop_Up_Executa_Receita", 1)
+SetData(AlwaysFalse, "Local HMI", LB, 120, 1)
+
+SetData(selection,"OMRON EtherNet/IP (NJ/NX Series)", "VAR://Index_Receita", 1)
+
+end macro_command
